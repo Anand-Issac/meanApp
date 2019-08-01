@@ -11,6 +11,8 @@ import { PostsService } from "./../posts.service";
 })
 export class PostListComponent implements OnInit, OnDestroy {
   deleteStatus : boolean = false;
+  postActiveStatus: boolean = true;
+  editStatus : boolean = false;
   posts: Post[] = [];
   private postsSub: Subscription;
 
@@ -35,7 +37,8 @@ export class PostListComponent implements OnInit, OnDestroy {
   }
 
   onEditPost(){
-
+    this.postActiveStatus = false;
+    this.editStatus = true;
   }
 
   ngOnDestroy() {

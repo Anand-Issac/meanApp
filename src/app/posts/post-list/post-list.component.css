@@ -6,3 +6,9 @@
 .info-text {
   text-align: center;
 }
+
+mat-form-field,
+textarea {
+  width: 100%;
+}
+
