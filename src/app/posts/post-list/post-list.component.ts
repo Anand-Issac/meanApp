@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { Post } from "./../post.model";
 import { PostsService } from "./../posts.service";
+import { NgForm } from "@angular/forms";
 
 @Component({
   selector: "app-post-list",
@@ -17,9 +18,6 @@ export class PostListComponent implements OnInit, OnDestroy {
   private postsSub: Subscription;
 
   constructor(public postsService: PostsService) {
-    console.log("initial construct");
-    let btn = document.getElementById("deleteButton");
-    //btn.addEventListener("click", (e:Event) => this.onDeletePost());
   }
 
   ngOnInit() {
@@ -39,6 +37,19 @@ export class PostListComponent implements OnInit, OnDestroy {
   onEditPost(){
     this.postActiveStatus = false;
     this.editStatus = true;
+  }
+
+  onFinishSavePost(editForm: NgForm, index: number){
+    //console.log(newTitle);
+    //console.log(newContent);
+    console.log(index);
+    //let newTitle = document.getElementById(idTitle)[0].value;
+    //let newContent = document.getElementById(idContent)[0].value;
+
+    this.postsService.editPost(editForm.value.newTitle, editForm.value.newContent, index, function() {console.log("returned")});
+    console.log("after returned");
+    this.postActiveStatus = true;
+    this.editStatus = false;
   }
 
   ngOnDestroy() {

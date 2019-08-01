@@ -4,37 +4,51 @@
       {{ post.title }}
     </mat-expansion-panel-header>
     <p *ngIf="postActiveStatus">{{ post.content }}</p>
-    <form #editForm="ngForm" *ngIf="editStatus">
+    <form #editForm="ngForm" *ngIf="editStatus" (submit)= "onFinishSavePost(editForm, posts.indexOf(post))">
       <mat-form-field *ngIf="editStatus">
         <input
             matInput
             type="text"
-            name="title"
+            name="newTitle"
+            id="newTitle"
             ngModel
             *ngIf="editStatus"
             required
+            #newTitle="ngModel"
+            
+            
             minlength="3"
-            placeholder="New Title"
-            #title="ngModel">
+            placeholder="New Title">
+        
       </mat-form-field>
       
       <mat-form-field *ngIf="editStatus">
         <textarea
             matInput
             rows="4"
-            name="content"
-            ngModel
+            name="newContent"
+            id="newContent"
+            ngModel 
             *ngIf="editStatus"
             required
+            
+        
             placeholder="New Content"
-            #content="ngModel"></textarea>
+           
+            #newContent="ngModel">
+
+            </textarea>
       </mat-form-field>
+      
+      <button mat-button id="saveButton" *ngIf="editStatus" type="submit" class="btn btn-info btn-lg btn-round" >SAVE NEW POST</button>
+      
     </form>
     <mat-action-row>
       <button mat-button color="primary" id="editButton" (click)="onEditPost()">EDIT</button>
       <button mat-button color="warn" id="deleteButton" (click)="onDeletePost(posts.indexOf(post))">DELETE</button>
-      <button mat-button id="saveButton" *ngIf="editStatus">SAVE</button>
+      
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
 <p class="info-text mat-body-1" *ngIf="posts.length <= 0">No posts added yet!</p>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
