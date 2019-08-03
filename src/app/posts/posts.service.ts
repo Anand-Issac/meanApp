@@ -1,6 +1,7 @@
 import { Post } from './post.model';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import {HttpClient} from '@angular/common/http';
 import { Title } from '@angular/platform-browser';
 import { stringify } from '@angular/compiler/src/util';
 
@@ -11,8 +12,17 @@ export class PostsService {
   private posts: Post[] = [];
   private postsUpdated = new Subject <Post[]> ();
 
+  constructor(private http: HttpClient) {} //Injects http client to variable http
+  
   getPosts() {
-    return [...this.posts];
+    this.http
+      .get<{ message: string; posts: Post[] }>(
+        "http://localhost:3000/api/posts"
+      )
+      .subscribe(postData => {
+        this.posts = postData.posts;
+        this.postsUpdated.next([...this.posts]);
+      });
   }
 
   getPostUpdateListener() {
@@ -20,8 +30,8 @@ export class PostsService {
   }
 
   addPost(title: string, content: string) {
-    console.log("adding post");
-    let post: Post = {title: title, content: content, newTitle: null, newContent: null};
+    console.log('adding post');
+    let post: Post = {id: null, title: title, content: content};
     this.posts.push(post);
     this.postsUpdated.next([...this.posts]);
   }
@@ -34,7 +44,7 @@ export class PostsService {
   editPost(newTitle: string, newContent: string, index: number, callback){
     console.log(newContent);
     console.log(newTitle);
-    let newPost= {title: newTitle, content: newContent, newTitle: null, newContent:null };
+    let newPost= {id: null, title: newTitle, content: newContent};
     this.posts.splice(index, 1, newPost);
     // console.log(this.posts.toString);
     this.postsUpdated.next([...this.posts]);

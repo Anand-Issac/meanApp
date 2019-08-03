@@ -4,7 +4,7 @@
       {{ post.title }}
     </mat-expansion-panel-header>
     <p *ngIf="postActiveStatus">{{ post.content }}</p>
-    <form #editForm="ngForm" *ngIf="editStatus" (submit)= "onFinishSavePost(editForm, posts.indexOf(post))">
+    <form #editForm="ngForm" *ngIf="editStatus" (submit)= "onFinishSavePost(editForm, posts.indexOf(post))" >
       <mat-form-field *ngIf="editStatus">
         <input
             matInput
@@ -14,11 +14,13 @@
             ngModel
             *ngIf="editStatus"
             required
+            
+           
             #newTitle="ngModel"
             
             
-            minlength="3"
-            placeholder="New Title">
+            minlength="1">
+            
         
       </mat-form-field>
       
@@ -35,12 +37,16 @@
         
             placeholder="New Content"
            
-            #newContent="ngModel">
-
+            #newContent="ngModel"
+        
+            ng-init = "newContent = 'HelloBob'"
+            
+            >
+            
             </textarea>
       </mat-form-field>
       
-      <button mat-button id="saveButton" *ngIf="editStatus" type="submit" class="btn btn-info btn-lg btn-round" >SAVE NEW POST</button>
+      <button mat-button id="saveButton" *ngIf="editStatus" type="submit" class="btn btn-info btn-lg btn-round" >SAVE CHANGES</button>
       
     </form>
     <mat-action-row>
@@ -50,5 +56,5 @@
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
-<p class="info-text mat-body-1" *ngIf="posts.length <= 0">No posts added yet!</p>
+<p class="info-text mat-body-1" *ngIf="posts.length <= 0">No posts added yet.</p>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
