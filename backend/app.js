@@ -1,7 +1,28 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 
+const mongoose = require('mongoose');
+const Post = require('./models/post');
 const app = express();
+
+// creates connection to database (node-angular)
+// mongoose.connect('mongodb+srv://anand:fgFT9REHn5oWPU40@cluster0-0mek3.mongodb.net/node-angular?retryWrites=true&w=majority').then(() => {
+//   console.log("Connected to database!");
+// })
+// .catch(() => {
+//   console.log("Connection failed!");
+// });
+
+mongoose
+  .connect(
+    "mongodb+srv://anand:fgFT9REHn5oWPU40@cluster0-0mek3.mongodb.net/node-angular?retryWrites=true&w=majority", { useNewUrlParser: true }
+  )
+  .then(() => {
+    console.log("Connected to database!");
+  })
+  .catch(() => {
+    console.log("Connection failed!");
+  });
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -19,9 +40,18 @@ app.use((req, res, next) => {
   next();
 });
 
+//mongo password: fgFT9REHn5oWPU40
 app.post("/api/posts", (req, res, next) => {
-  const post = req.body;
+  
+  const post = new Post({
+    title: req.body.title,
+    content: req.body.content
+  });
+  
   console.log(post);
+  // save post information to mongodb; creates collection which is called
+  // 'posts' (plural form of model name)
+  post.save();
   res.status(201).json({
     message: 'Post added successfully'
   });
@@ -31,12 +61,12 @@ app.get("/api/posts", (req, res, next) => {
   const posts = [
     {
       id: "fadf12421l",
-      title: "First server-side post",
+      title: "First server side post",
       content: "This is coming from the server"
     },
     {
       id: "ksajflaj132",
-      title: "Second server-side post",
+      title: "Second server side post",
       content: "This is coming from the server!"
     }
   ];
