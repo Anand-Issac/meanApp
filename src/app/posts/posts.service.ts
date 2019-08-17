@@ -30,26 +30,31 @@ export class PostsService {
   }
 
   addPost(title: string, content: string) {
-    const post: Post = { id: null, title: title, content: content };
+    const post: Post = { _id: null, title: title, content: content };
     this.http
-      .post<{ message: string }>("http://localhost:3000/api/posts", post)
+      .post<{ message: string, postId: string }>("http://localhost:3000/api/posts", post)
       .subscribe(responseData => {
-        console.log(responseData.message);
+        const id = responseData.postId;
+        post._id = id;
         this.posts.push(post);
         this.postsUpdated.next([...this.posts]);
       });
   }
 
-  delPost(index: number){
-    this.posts.splice(index, 1);
-    this.postsUpdated.next([...this.posts]);
+  deletePost(postId: string) {
+    this.http.delete("http://localhost:3000/api/posts/" + postId)
+      .subscribe(() => {
+        const updatedPosts = this.posts.filter(post => post._id !== postId);
+        this.posts = updatedPosts;
+        this.postsUpdated.next([...this.posts]);
+      });
   }
 
   editPost(newTitle: string, newContent: string, index: number, callback){
     console.log(newContent);
     console.log(newTitle);
     let newPost= {id: null, title: newTitle, content: newContent};
-    this.posts.splice(index, 1, newPost);
+    //this.posts.splice(index, 1, newPost);
     // console.log(this.posts.toString);
     this.postsUpdated.next([...this.posts]);
     callback();

@@ -42,37 +42,32 @@ app.use((req, res, next) => {
 
 //mongo password: fgFT9REHn5oWPU40
 app.post("/api/posts", (req, res, next) => {
-  
   const post = new Post({
     title: req.body.title,
     content: req.body.content
   });
-  
-  console.log(post);
-  // save post information to mongodb; creates collection which is called
-  // 'posts' (plural form of model name)
-  post.save();
-  res.status(201).json({
-    message: 'Post added successfully'
+  post.save().then(createdPost => {
+    res.status(201).json({
+      message: "Post added successfully",
+      postId: createdPost._id
+    });
   });
 });
 
 app.get("/api/posts", (req, res, next) => {
-  const posts = [
-    {
-      id: "fadf12421l",
-      title: "First server side post",
-      content: "This is coming from the server"
-    },
-    {
-      id: "ksajflaj132",
-      title: "Second server side post",
-      content: "This is coming from the server!"
-    }
-  ];
-  res.status(200).json({
-    message: "Posts fetched successfully!",
-    posts: posts
+  Post.find().then(documents => {
+    res.status(200).json({
+      message: "Posts fetched successfully!",
+      posts: documents
+    });
+  });
+  
+});
+
+app.delete("/api/posts/:_id", (req, res, next) => {
+  Post.deleteOne({_id: req.params._id}).then(result =>{
+    console.log(result);
+    res.status(200).json({message: "Post deleted!"});
   });
 });
 
