@@ -1,60 +1,16 @@
-<mat-accordion multi="true" *ngIf="posts.length > 0">
+
+<mat-accordion multi="true" *ngIf="posts.length > 0 && !isLoading">
   <mat-expansion-panel *ngFor="let post of posts">
-    <mat-expansion-panel-header *ngIf="postActiveStatus">
+    <mat-expansion-panel-header>
       {{ post.title }}
     </mat-expansion-panel-header>
-    <p *ngIf="postActiveStatus">{{ post.content }}</p>
-    <form #editForm="ngForm" *ngIf="editStatus" (submit)= "onFinishSavePost(editForm, posts.indexOf(post))" >
-      <mat-form-field *ngIf="editStatus">
-        <input
-            matInput
-            type="text"
-            name="newTitle"
-            id="newTitle"
-            ngModel
-            *ngIf="editStatus"
-            required
-            
-           
-            #newTitle="ngModel"
-            
-            
-            minlength="1">
-            
-        
-      </mat-form-field>
-      
-      <mat-form-field *ngIf="editStatus">
-        <textarea
-            matInput
-            rows="4"
-            name="newContent"
-            id="newContent"
-            ngModel 
-            *ngIf="editStatus"
-            required
-            
-        
-            placeholder="New Content"
-           
-            #newContent="ngModel"
-        
-            ng-init = "newContent = 'HelloBob'"
-            
-            >
-            
-            </textarea>
-      </mat-form-field>
-      
-      <button mat-button id="saveButton" *ngIf="editStatus" type="submit" class="btn btn-info btn-lg btn-round" >SAVE CHANGES</button>
-      
-    </form>
+    <p>{{ post.content }}</p>
     <mat-action-row>
-      <button mat-button color="primary" id="editButton" >EDIT</button>
-      <button mat-button color="warn" id="deleteButton" (click)="onDelete(post._id)">DELETE</button>
-      
+      <a mat-button color="primary" [routerLink]="['/edit', post._id]">EDIT</a>
+      <button mat-button color="warn" (click)="onDelete(post._id)">DELETE</button>
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
-<p class="info-text mat-body-1" *ngIf="posts.length <= 0">No posts added yet.</p>
+<p class="info-text mat-body-1" *ngIf="posts.length <= 0 && !isLoading">No posts added yet!</p>
+
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">

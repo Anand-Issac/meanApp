@@ -1,1 +1,13 @@
-<mat-toolbar color="primary">myNotes</mat-toolbar>
+<mat-toolbar color="primary">
+    
+    <span><a [routerLink]="['/']" routerLinkActive="mat-accent" >myNotes</a></span> 
+    <ul>
+        <li>
+            <a mat-button [routerLink]="['/create']" routerLinkActive="mat-accent" >newPost</a>
+        </li>
+
+    </ul>
+
+
+
+</mat-toolbar>

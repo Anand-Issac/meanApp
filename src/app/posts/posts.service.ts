@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import { Title } from '@angular/platform-browser';
 import { stringify } from '@angular/compiler/src/util';
+import { Router } from "@angular/router";
 
 @Injectable({providedIn: 'root'})
 export class PostsService {
@@ -11,8 +12,9 @@ export class PostsService {
 
   private posts: Post[] = [];
   private postsUpdated = new Subject <Post[]> ();
+  
 
-  constructor(private http: HttpClient) {} //Injects http client to variable http
+  constructor(private http: HttpClient, private router: Router) {} //Injects http client to variable http
   
   getPosts() {
     this.http
@@ -27,6 +29,10 @@ export class PostsService {
 
   getPostUpdateListener() {
     return this.postsUpdated.asObservable();
+  }
+
+  getPost(id: string) {
+    return {...this.posts.find(p => p._id === id)};
   }
 
   addPost(title: string, content: string) {
@@ -58,5 +64,19 @@ export class PostsService {
     // console.log(this.posts.toString);
     this.postsUpdated.next([...this.posts]);
     callback();
+  }
+
+  updatePost(id: string, title: string, content: string) {
+    const post: Post = { _id: id, title: title, content: content };
+    this.http
+      .put("http://localhost:3000/api/posts/" + id, post)
+      .subscribe(response => {
+        const updatedPosts = [...this.posts];
+        const oldPostIndex = updatedPosts.findIndex(p => p._id === post._id);
+        updatedPosts[oldPostIndex] = post;
+        this.posts = updatedPosts;
+        this.postsUpdated.next([...this.posts]);
+        this.router.navigate(["/"]);
+      });
   }
 }
